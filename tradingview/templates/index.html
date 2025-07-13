@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <div class="row mx-0 justify-content-center">
+    <div class="col-md-7 col-lg-5 px-lg-2 col-xl-4 px-xl-0 px-xxl-3">
+      <h1 class="d-block mb-4 text-light">Log In</h1>
+      	 	<div class="">
+                {% for message in messages %}
+                {% if message == 0 %}
+                    <p class="alert alert-success fade show" role="alert">{{message}}</p>
+                    {% else %}
+                    <p class="alert alert-danger fade show" role="alert">{{message}}</p>
+                    {% endif %}
+                {% endfor %}
+            </div> 
+      	<form action="{% url 'login' %}" method="POST" class="w-100 rounded-1 p-4 border text-secondary border-secondary">
+      		{% csrf_token %}
+	        <label class="d-block mb-4">
+	          <span class="form-label d-block text-light">Username</span>
+	          <input
+	            name="username"
+	            type="text"
+	            class="form-control text-light border-secondary bg-transparent"
+	            placeholder="username" required
+	          />
+	        </label>
+	        <label class="d-block mb-4">
+	          <span class="form-label d-block text-light">Password</span>
+	          <input
+	            name="password"
+	            type="password"
+	            class="form-control text-light border-secondary bg-transparent"
+	            placeholder="Password" required
+	          />
+	        </label>        
+            <div class="mb-3 d-flex gap-3">
+	          <button type="submit" class="btn btn-primary px-3 rounded-3">
+	            Login
+	          </button>
+	          <a href="{% url 'signup' %}" class="btn btn-primary px-3 rounded-3">Signup</a>
+	          
+	        </div>
+            <div class="d-block text-end">
+        		<div class="small text-white-50">
+		            Developed by
+		            <a
+		              href="https://scoutifii.com"
+		              class="text-decoration-none text-white-50"
+		              target="_blank"
+		              >Scoutifii 
+		              <img width="24" height="24" src="{% static 'assets/images/scoutifii3.jpg' %}" alt="Scoutifii logo">
+		          	</a> 
+		        </div>
+	        </div>        
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
