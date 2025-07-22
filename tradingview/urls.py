@@ -17,8 +17,6 @@ urlpatterns = [
     path('market', views.market, name='market'),
     path('symbol/<str:symbol>', views.symbol, name='symbol'),
     path('autosuggest', views.autosuggest, name='autosuggest'),
-    # path('post-list', PostView.as_view(), name='post-list'),
-    # path('comments/<str:pk>', CommentView.as_view(), name='comments'),
     path('create-post/<int:pk>', views.create_post, name='create-post'),
     path('market/<str:symbol>', SymbolChartView.as_view(template_name='chart.html'), name='market'),
     path('get-symbol-id/<str:symbol>', views.get_symbol_id, name='get-symbol-id'),

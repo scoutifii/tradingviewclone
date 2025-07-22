@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = os.getenv('DJANGO_DEBUG', 0) != 'False'
+DEBUG = os.getenv('DJANGO_DEBUG', 0) != 'True'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
@@ -74,19 +74,12 @@ WSGI_APPLICATION = 'tradingview_clone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("MYSQL_DB"),
-        'USER': os.getenv("MYSQL_USER"),
-        'PASSWORD': os.getenv("MYSQL_PASSWORD"),
-        'PORT': os.getenv("MYSQL_PORT"),
-        'HOST': os.getenv("MYSQL_HOST"),
-        'DB_IGNORE_SSL': os.getenv("DB_IGNORE_SSL") == "true",
-        'OPTIONS': {
-            # 'init_command': 'SET default_storage_engine=INNODB',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
-            'charset': 'utf8mb4',
-            "autocommit": True,
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'PORT': os.getenv("DB_PORT"),
+        'HOST': os.getenv("DB_HOST"),
     }
 }
 
