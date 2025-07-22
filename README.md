@@ -28,4 +28,5 @@
     - It will load the interface that has login form but click signup button to signup
     - After signup is successful it will redirect you to the dashboard page
     - on the sidebar you can access the symbols by click on any of them which will redirect to its details
+    - You can search symbols using the search bar which will enventually redirect you to http://127.0.0.1:800/market/<symbolid>
 
