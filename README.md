@@ -9,15 +9,17 @@
 - On Unix/MacOS
     - cd tradingview_clone/bin/activate
 - Run command:
-    - git clone https://github.com/scoutifii/tradingviewclone
+    - git clone https://github.com/scoutifii/tradingviewclone/tree/master
      - to the local directory tradingview_clone\Scripts
+    - Or navigate to https://github.com/scoutifii/tradingviewclone/tree/master download files
+    - and extract them to the local directory tradingview_clone\Scripts
 - Install requirements by running command:
     - pip install -r requirements.txt
-    - Database settings are in a file .env
+    - Create a database using the settings in a file .env of the downloaded files from the github respository given above
 - Run command:
     - py manage.py makemigrations  or python manage.py makemigrations
         - incase of any errors while running the above command, just run the next command it will migrate the database
--Run command:
+- Run command:
     - py manage.py migrate or python manage.py migrate
 - Run command:
   - py manage.py runserver or python manage.py runserver
