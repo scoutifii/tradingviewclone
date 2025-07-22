@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<form class="msger-inputarea" action="{% url 'create-post' symbol.pk %}" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="symbol_id" value="">
+	<input type="hidden" name="profile_id" value="{{user_profile.pk}}">
+	<input type="text" class="msger-input" name="title" value="{{post.title}}" placeholder="Title">
+	<input type="text" class="msger-input" name="content" value="{{post.content}}" placeholder="Enter your message...">
+	<button type="submit" class="msger-send-btn">Send</button>
+</form>
+{% endblock %}

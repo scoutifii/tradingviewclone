@@ -1,0 +1,3 @@
+tradingview/migrations/*.py
+tradingview/api.py
+tradingview/requirements.txt

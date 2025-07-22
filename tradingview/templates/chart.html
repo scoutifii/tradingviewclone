@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="p2-counter bg-1 mt-4 align-items-center">
+        <div class="row h-100 row-cols-1 row-cols-md-2 row-cols-lg-4 align-items-center">
+            <div class="col h-100  d-flex align-items-center justify-content-around">                
+                <div class="p2-count h-50 w-100 display-6 fw-bolder text-light d-flex" id="symbol-data">
+                </div>
+            </div>
+        </div>
+	    <div class="container p-5">
+      <ul class="nav nav-pills mb-3 border-bottom border-2" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-primary fw-semibold active position-relative" id="pills-overview-tab" data-bs-toggle="pill" data-bs-target="#pills-overview" type="button" role="tab" aria-controls="pills-overview" aria-selected="true">Overview</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-primary fw-semibold position-relative" id="pills-news-tab" data-bs-toggle="pill" data-bs-target="#pills-news" type="button" role="tab" aria-controls="pills-news" aria-selected="false">News</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-primary fw-semibold position-relative" id="pills-technicals-tab" data-bs-toggle="pill" data-bs-target="#pills-technicals" type="button" role="tab" aria-controls="pills-technicals" aria-selected="false">Technicals</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-primary fw-semibold position-relative" id="pills-discussion-tab" data-bs-toggle="pill" data-bs-target="#pills-discussion" type="button" role="tab" aria-controls="pills-discussion" aria-selected="false">Discussion</button>
+        </li>
+      </ul>
+      <div class="tab-content p-3 text-danger" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-overview" role="tabpanel" aria-labelledby="pills-overview-tab">            
+            <canvas id="symbol-container" class="w-100 h-75"></canvas>
+        </div>
+        <div class="tab-pane fade" id="pills-news" role="tabpanel" aria-labelledby="pills-news-tab">
+            <div class="col p-2">
+                <div class="chartt h-100 w-100 align-content-center bg-1">
+                    <h2 class="wht ms-4"> News</h2>
+                    <table id="symbolnews" class="table table-dark table-bordered table-hover w-100">
+                        <thead class="thead-dark">
+                            <tr>
+                              <th scope="col">Time</th>
+                              <th scope="col">Symbol</th>
+                              <th scope="col">Headline</th>
+                              <th scope="col">Provider</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-technicals" role="tabpanel" aria-labelledby="pills-technicals-tab">
+          <h2>Technicals</h2>
+            <div class="col p-2">
+                <div class="chartt h-100 w-100 align-content-center bg-1">
+                    <h2 class="wht ms-4"> Technicals</h2>
+                    <table id="technicals" class="table table-dark table-bordered table-hover w-100">
+                        <thead class="thead-dark">
+                            <tr>
+                              <th scope="col">Symbol</th>
+                              <th scope="col">Name</th>
+                              <th scope="col">Value</th>                              
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-discussion" role="tabpanel" aria-labelledby="pills-discussion-tab">
+           <div class="col col-md-8 col-sm-12 p-2">
+                <div class="chartt h-100 w-100 align-content-center">
+                    <section class="msger h-100 w-100">
+                        <header class="msger-header">
+                            <div class="msger-header-title">
+                              <i class="fas fa-comment-alt"></i> Forum
+                            </div>
+                            <div class="msger-header-options">
+                              <span><i class="fas fa-cog"></i></span>
+                            </div>
+                        </header>                            
+                        <main class="msger-chat">
+                            <div class="msg left-msg">
+                              <div
+                               class="msg-img"
+                               style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                              ></div>
+                        
+                              <div class="msg-bubble">
+                                <div class="msg-info">
+                                  <div class="msg-info-name">RENLIN</div>
+                                  <div class="msg-info-time">12:45</div>
+                                </div>
+                        
+                                <div class="msg-text">
+                                  Hi, i want to deal with you about our company.
+                                </div>
+                              </div>
+                            </div>
+                        </main>
+                             
+                        <form class="form msger-inputarea" enctype="multipart/form-data" id="symbol_messages">
+                            {% csrf_token %}                            
+                            <input type="hidden" name="profile_id" value="{{user_profile.pk}}">
+                            <input type="hidden" name="symbol_id" value="{{symbol.pk}}">
+                            <div class="input-group mb-3">
+                              <input type="text" class="form-control" name="content" placeholder="What's on your mind about?">
+                              <button class="btn btn-outline-primary" type="submit" id="button-addon2">Post</button>
+                            </div>
+                        </form>                              
+                    </section>
+                </div>
+            </div>
+        </div>
+      </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Get the symbol name from the URL
+        const symbol = '{{ symbol }}';
+        const url = `/symbol/${symbol}`;
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('symbol-container').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: data.symbol_chart,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: `${symbol} Chart`
+                    ,
+                    font: {
+                        size: 40,
+                        family: 'Arial',
+                        weight: 'bold',
+                        style: 'italic'
+                        },
+                    color: '#00698f',
+                    }
+                }
+            });
+        });
+
+        let previousHigh = null;
+        setInterval(() => {
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const symbolName = data.symbol_chart.symbol_name[0];
+                const exchange = data.symbol_chart.exchange[0];
+                const ticker = data.symbol_chart.symbol[0];
+                const price = data.symbol_chart.volume.at(- 1);
+                const high = data.symbol_chart.high.at(-1);
+                
+
+                let highIndicator = '';
+                let highPercentChange = '';
+
+                  if (previousHigh !== null) {
+                     const percentChange = ((high - previousHigh) / previousHigh) * 100;
+                     highPercentChange = `${percentChange.toFixed(2)}%`;
+
+                    if (high > previousHigh) {
+                      highIndicator = '↑'; // Increase
+                    } else if (high < previousHigh) {
+                      highIndicator = '↓'; // Decrease
+                    } else {
+                      highIndicator = '━'; // No change
+                      highPercentChange = '0.00%';  // Percentage Change
+                    }
+                  }
+
+                  previousHigh = high;
+
+
+                html = `<div class="d-flex justify-between">`;
+                html += `<h2 class="text-2xl font-bold mx-2">${ticker}</h2>`;
+                html += `<h4 class="mx-2">${symbolName}</h4>`;
+                html += `<h5 class="text-2xl font-bold mx-2">${exchange}</h5>`;
+                html += `<h3 class="inline-block mx-2">${price}</h3>`;
+                 if (highPercentChange !== '') {
+                    if (highIndicator === '↑') {
+                      html += `<h3 class="mx-2 text-green-500">${highIndicator} ${high}</h3>`;
+                      html += `<h3 class="inline-block mx-2 text-green-500">${highPercentChange}</h3>`;
+                    } else if (highIndicator === '↓') {
+                      html += `<h3 class="mx-2 text-red-500">${highIndicator} ${high}</h3>`;
+                      html += `<h3 class="inline-block mx-2 text-red-500">${highPercentChange}</h3>`;
+                    } else {
+                      html += `<h3 class="mx-2">${highIndicator} ${high}</h3>`;
+                      html += `<h3 class="inline-block mx-2">${highPercentChange}</h3>`;
+                    }
+                  } else {
+                        html += `<h3 class="inline-block mx-2">${high}</h3>`;
+                    }
+                
+                
+                html += `</div>`;
+
+                document.getElementById('symbol-data').innerHTML = html;
+            }).catch(error => console.error('Error fetching data:', error));
+        }, 10000); // Fetch every 10 seconds
+
+    </script>
+    <script>
+    	fetch(url)
+	    .then(response => response.json())
+	    .then(data => {
+	        if (data.error) {
+	            console.error(data.error);
+	        } else {
+	            const newsData = data.symbol_chart.title.map((title, index) => ({
+                time: data.symbol_chart.created_at[index],
+                symbol: `${symbol}`,
+                title: title,
+                source: data.symbol_chart.source[index]
+	            }));
+
+	            $('#symbolnews').DataTable({
+	                data: newsData,
+	                columns: [
+	                    { data: 'time', title: 'Time' },
+	                    { data: 'symbol', title: 'Symbol' },
+	                    { data: 'title', title: 'Title' },
+	                    { data: 'source', title: 'Source' }
+	                ],
+	                destroy: true
+	            });
+
+	        }
+	    })
+	    .catch(error => console.error('Error:', error));
+
+    </script>
+    <script>
+    	fetch(url)
+	    .then(response => response.json())
+	    .then(data => {
+	        if (data.error) {
+	            console.error(data.error);
+	        } else {
+	            const technicalData = data.symbol_chart.indicator.map((indicator, index) => ({
+	            symbol: `${symbol}`,
+                indicator: indicator,
+                value: data.symbol_chart.value[index]
+	            }));
+
+	            $('#technicals').DataTable({
+	                data: technicalData,
+	                columns: [
+	                	{ data: 'symbol', title: 'Symbol' },
+	                    { data: 'indicator', title: 'Name' },
+	                    { data: 'value', title: 'Value' }
+	                ],
+	                destroy: true
+	            });
+
+	        }
+	    })
+	    .catch(error => console.error('Error:', error));
+
+    </script>
+    <script>
+        const getCookie = (name) => {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie name begin with the name you want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+          }
+
+          const csrftoken = getCookie('csrftoken');
+          const form = document.getElementById('symbol_messages');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch(`/get-symbol-id/${symbol}`)
+            .then(response => response.json())
+            .then(data => {
+                const symbolId = data.id;
+                const formData = new FormData(form);
+                fetch(`/create-post/${symbolId}`, {
+                  method: 'POST',
+                  headers: {
+                    'X-CSRFToken': csrftoken 
+                  },
+                    body: formData
+                })
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+                  return response.json();
+                })
+                .then(data => console.log(data))
+                .catch(error => console.error(error));
+            })
+            .catch(error => console.error(error));
+        });
+    </script>
+{% endblock %}
