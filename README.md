@@ -3,7 +3,7 @@
 ### Stocks, Forex, Crypto, Commodities, Indices, etc
 - With python installed
 - Run the following command to create a virtual environment
-    - pip -m venv tradingview_clone
+    - python -m venv tradingview_clone
 - On windows
     - cd tradingview_clone\Scripts\activate.bat
 - On Unix/MacOS
